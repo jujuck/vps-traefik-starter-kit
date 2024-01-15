@@ -36,7 +36,7 @@ services:
       - "traefik.http.routers.pgadmin-${DATABASE_SUBDOMAIN_NAME:-database}-secure.entrypoints=websecure"
       - "traefik.http.routers.pgadmin-${DATABASE_SUBDOMAIN_NAME:-database}-secure.rule=Host(`pgadmin.${DATABASE_SUBDOMAIN_NAME:-database}.${HOST:-localhost}`)"
     environment:
-      PMA_HOST: ${DATABASE_SUBDOMAIN_NAME:-database}-db
+      PGADMIN_HOST: ${DATABASE_SUBDOMAIN_NAME:-database}-db
 
 networks:
   proxy:
