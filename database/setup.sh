@@ -1,2 +1,1 @@
-mysql -u root -p$MYSQL_ROOT_PASSWORD --execute \
-"GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%';"
+psql -U postgres -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE *.* TO '$POSTGRES_USER'@'%';"
