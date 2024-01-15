@@ -2,41 +2,39 @@ version: '3.4'
 
 services:
   database:
-    image: mysql/mysql-server:8.0
+    image: postgres
     container_name: ${DATABASE_SUBDOMAIN_NAME:-database}-db
     restart: always
     volumes:
       - ./setup.sh:/docker-entrypoint-initdb.d/setup.sh
-      - db-data:/var/lib/mysql
+      - db-data:/var/lib/postgres
     environment:
       # So you don't have to use root, but you can if you like
-      MYSQL_USER: ${USER_NAME:-user}
+      POSTGRES_PASSWORD: ${USER_PASSWORD:-password}
       # You can use whatever password you like
-      MYSQL_PASSWORD: ${USER_PASSWORD:-password}
-      # Password for root access
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      POSTGRES_USER: ${USER_NAME:-user}
     networks:
       - proxy
     expose:
       # Opens port 3306 on the container
-      - 3306
+      - 5432
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.${DATABASE_SUBDOMAIN_NAME:-database}-secure.entrypoints=mysql"
+      - "traefik.http.routers.${DATABASE_SUBDOMAIN_NAME:-database}-secure.entrypoints=postgres"
       - "traefik.http.routers.${DATABASE_SUBDOMAIN_NAME:-database}-secure.rule=Host(`${DATABASE_SUBDOMAIN_NAME:-database}.${HOST:-localhost}`)"
 
-  phpmyadmin:
-    image: phpmyadmin
-    container_name: ${DATABASE_SUBDOMAIN_NAME:-database}-pma
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ${DATABASE_SUBDOMAIN_NAME:-database}-pgadmin
     restart: always
     networks:
       - proxy
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.pma-${DATABASE_SUBDOMAIN_NAME:-database}-secure.entrypoints=websecure"
-      - "traefik.http.routers.pma-${DATABASE_SUBDOMAIN_NAME:-database}-secure.rule=Host(`pma.${DATABASE_SUBDOMAIN_NAME:-database}.${HOST:-localhost}`)"
+      - "traefik.http.routers.pgadmin-${DATABASE_SUBDOMAIN_NAME:-database}-secure.entrypoints=websecure"
+      - "traefik.http.routers.pgadmin-${DATABASE_SUBDOMAIN_NAME:-database}-secure.rule=Host(`pgadmin.${DATABASE_SUBDOMAIN_NAME:-database}.${HOST:-localhost}`)"
     environment:
       PMA_HOST: ${DATABASE_SUBDOMAIN_NAME:-database}-db
 
