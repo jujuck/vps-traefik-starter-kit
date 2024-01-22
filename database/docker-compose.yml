@@ -34,7 +34,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
       - "traefik.http.routers.pgadmin-${DATABASE_SUBDOMAIN_NAME:-database}-secure.entrypoints=websecure"
-      - "traefik.http.routers.pgadmin-${DATABASE_SUBDOMAIN_NAME:-database}-secure.rule=Host(`pgadmin.${DATABASE_SUBDOMAIN_NAME:-database}.${HOST:-localhost}`)"
+      - "traefik.http.routers.pgadmin-${DATABASE_SUBDOMAIN_NAME:-database}-secure.rule=Host(`pgadmin.${HOST:-localhost}`)"
     environment:
       PGADMIN_HOST: ${DATABASE_SUBDOMAIN_NAME:-database}-db
 
